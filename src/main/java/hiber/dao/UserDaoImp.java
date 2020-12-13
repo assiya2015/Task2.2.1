@@ -25,20 +25,18 @@ public class UserDaoImp implements UserDao {
    @Override
    @SuppressWarnings("unchecked")
    public List<User> listUsers() {
-      TypedQuery<User> query=sessionFactory.getCurrentSession().createQuery("from User");
+      TypedQuery<User> query=sessionFactory.getCurrentSession().createQuery("FROM User");
       return query.getResultList();
    }
 
    @Override
-   public User getUserByCar(String model, int series) {
-      Query queryCar = sessionFactory.getCurrentSession().createQuery("SELECT id FROM Car where model =:model and series =:series");
-      queryCar.setParameter("model", model);
-      queryCar.setParameter("series", series);
-      long id = (long) queryCar.uniqueResult();
-      Query queryUser = sessionFactory.getCurrentSession().createQuery("FROM User where car_id =:id");
-      queryUser.setParameter("id", id);
-      User user = (User) queryUser.uniqueResult();
-      return user;
+   public User getUserWithCar(String model, int series) {
+      String HQL = "FROM Car car LEFT OUTER JOIN FETCH car.user  where car.model =:model and car.series =:series";
+      Query<Car> query = sessionFactory.getCurrentSession().createQuery(HQL, Car.class);
+      query.setParameter("model", model);
+      query.setParameter("series", series);
+      Car car = query.uniqueResult();
+      return car.getUser();
    }
 
 }

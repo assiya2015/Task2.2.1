@@ -31,8 +31,8 @@ public class MainApp {
          System.out.println();
       }
 
-      User user = userService.getUserByCar("Renault", 5);
-      System.out.println("User by car is find: "+user.toString());
+      User user = userService.getUserWithCar("Renault", 5);
+      System.out.println("User by car is find: "+ user.toString());
 
       context.close();
    }
